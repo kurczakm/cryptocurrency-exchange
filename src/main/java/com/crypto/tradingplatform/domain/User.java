@@ -1,5 +1,7 @@
 package com.crypto.tradingplatform.domain;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -14,12 +16,15 @@ public class User {
     private Long id;
 
     @Column(name = "email", unique = true)
+    @NotNull
     private String email;
 
     @Column(name = "name", unique = true)
+    @NotNull
     private String name;
 
     @Column(name = "password")
+    @NotNull
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -28,21 +33,23 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
+    @NotNull
     private Collection<Role> roles;
 
-    @Column(name = "funds")
-    private BigDecimal funds;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "wallet_id", referencedColumnName = "id")
+    @NotNull
+    private Wallet wallet;
 
     public User() {
-        funds = new BigDecimal(1000);
     }
 
-    public User(String email, String name, String password, Collection<Role> roles) {
+    public User(String email, String name, String password, Collection<Role> roles, Wallet wallet) {
         this.email = email;
         this.name = name;
         this.password = password;
         this.roles = roles;
-        funds = new BigDecimal(1000);
+        this.wallet = wallet;
     }
 
     public Long getId() {
@@ -85,11 +92,11 @@ public class User {
         this.roles = roles;
     }
 
-    public BigDecimal getFunds() {
-        return funds;
+    public Wallet getWallet() {
+        return wallet;
     }
 
-    public void setFunds(BigDecimal funds) {
-        this.funds = funds;
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
     }
 }

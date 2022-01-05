@@ -1,7 +1,7 @@
 package com.crypto.tradingplatform.service;
 
-import com.crypto.tradingplatform.domain.Role;
-import com.crypto.tradingplatform.domain.User;
+import com.crypto.tradingplatform.domain.*;
+import com.crypto.tradingplatform.repository.CryptocurrencyRepository;
 import com.crypto.tradingplatform.repository.RoleRepository;
 import com.crypto.tradingplatform.repository.UserRepository;
 import com.crypto.tradingplatform.web.detail.CustomUserDetails;
@@ -14,9 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,10 +23,14 @@ public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private CryptocurrencyRepository cryptocurrencyRepository;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    private final BigDecimal startFunds = new BigDecimal(1000);
+
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, CryptocurrencyRepository cryptocurrencyRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.cryptocurrencyRepository = cryptocurrencyRepository;
     }
 
     @Bean
@@ -37,11 +40,15 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User save(UserRegistrationDto userRegistrationDto) {
+        List<Cryptocurrency> cryptocurrencies = cryptocurrencyRepository.findAll();
+        Wallet wallet = new Wallet(startFunds, cryptocurrencies);
+
         User user = new User(
                 userRegistrationDto.getEmail(),
                 userRegistrationDto.getName(),
                 passwordEncoder().encode(userRegistrationDto.getPassword()),
-                Arrays.asList(roleRepository.getById((long) 1))
+                Arrays.asList(roleRepository.getById((long) 1)),
+                wallet
         );
 
         return userRepository.save(user);

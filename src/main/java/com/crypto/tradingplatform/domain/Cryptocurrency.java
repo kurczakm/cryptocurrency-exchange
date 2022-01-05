@@ -3,25 +3,26 @@ package com.crypto.tradingplatform.domain;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "role")
-public class Role {
+@Table(name = "cryptocurrency")
+public class Cryptocurrency {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "symbol", unique = true)
+    @NotNull
+    private String symbol;
+
     @Column(name = "name", unique = true)
     @NotNull
     private String name;
 
-    public Role() {
-    }
-
-    public Role(String name) {
-        this.name = name;
+    public Cryptocurrency() {
     }
 
     public Long getId() {
@@ -32,6 +33,14 @@ public class Role {
         this.id = id;
     }
 
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+
     public String getName() {
         return name;
     }
@@ -39,4 +48,5 @@ public class Role {
     public void setName(String name) {
         this.name = name;
     }
+
 }
