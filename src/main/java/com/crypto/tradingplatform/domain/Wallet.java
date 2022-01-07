@@ -4,10 +4,7 @@ import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "wallet")
@@ -22,17 +19,23 @@ public class Wallet {
     @NotNull
     private BigDecimal funds;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "wallet")
-    private Set<WalletCryptocurrency> ownedCrypto;
+    @ElementCollection
+    @CollectionTable(name = "cryptocurrency_amount_mapping",
+                    joinColumns = {@JoinColumn(name = "wallet_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "cryptocurrency_id")
+    @Column(name = "amount")
+    private Map<Cryptocurrency, BigDecimal> ownedCrypto;
+
 
     @OneToMany(mappedBy = "wallet")
     private Set<Operation> operations;
 
     public Wallet() {
-        ownedCrypto = new HashSet<>();
+        ownedCrypto = new HashMap<>();
+        operations = new HashSet<>();
     }
 
-    public Wallet(BigDecimal funds, Set<WalletCryptocurrency> ownedCrypto, Set<Operation> operations) {
+    public Wallet(BigDecimal funds, Map<Cryptocurrency, BigDecimal> ownedCrypto, Set<Operation> operations) {
         this.funds = funds;
         this.ownedCrypto = ownedCrypto;
         this.operations = operations;
@@ -40,10 +43,10 @@ public class Wallet {
 
     public Wallet(BigDecimal funds, List<Cryptocurrency> cryptocurrencies) {
         this.funds = funds;
-        this.ownedCrypto = new HashSet<>();
+        this.ownedCrypto = new HashMap<>();
 
         for (Cryptocurrency cryptocurrency : cryptocurrencies) {
-            ownedCrypto.add(new WalletCryptocurrency(this, cryptocurrency, BigDecimal.ZERO));
+            ownedCrypto.put(cryptocurrency, BigDecimal.ZERO);
         }
     }
 
@@ -63,23 +66,19 @@ public class Wallet {
         this.funds = funds;
     }
 
+    public Map<Cryptocurrency, BigDecimal> getOwnedCrypto() {
+        return ownedCrypto;
+    }
+
+    public void setOwnedCrypto(Map<Cryptocurrency, BigDecimal> ownedCrypto) {
+        this.ownedCrypto = ownedCrypto;
+    }
+
     public Set<Operation> getOperations() {
         return operations;
     }
 
     public void setOperations(Set<Operation> operations) {
         this.operations = operations;
-    }
-
-    public Set<WalletCryptocurrency> getOwnedCrypto() {
-        return ownedCrypto;
-    }
-
-    public void setOwnedCrypto(Set<WalletCryptocurrency> ownedCrypto) {
-        this.ownedCrypto = ownedCrypto;
-    }
-
-    public void add(Cryptocurrency cryptocurrency, BigDecimal amount) {
-        ownedCrypto.add(new WalletCryptocurrency(this, cryptocurrency, amount));
     }
 }

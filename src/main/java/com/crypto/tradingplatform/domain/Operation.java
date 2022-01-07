@@ -51,8 +51,7 @@ public class Operation {
     public Operation() {
     }
 
-    public Operation(Date date, Cryptocurrency cryptocurrency, BigDecimal amount, BigDecimal volume, BigDecimal cryptoSaldo, BigDecimal fundsSaldo, Wallet wallet) {
-        this.date = date;
+    public Operation(Cryptocurrency cryptocurrency, BigDecimal amount, BigDecimal volume, BigDecimal cryptoSaldo, BigDecimal fundsSaldo, Wallet wallet) {
         this.cryptocurrency = cryptocurrency;
         this.amount = amount;
         this.volume = volume;

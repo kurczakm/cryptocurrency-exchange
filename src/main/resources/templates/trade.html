@@ -17,15 +17,31 @@
     <br>
     <br>
 
-    <h1>WELCOME</h1> <span th:text="${user.name}">email</span>
+    <h1>Trade</h1>
 
     <br>
 
-    <a href="/" th:href="@{/wallet}">Wallet</a>
+    <!--here-->
+    <table>
+        <thead>
+        <tr>
+            <th th:text="#{trade.cryptocurrencyName}">Cryptocurrency</th>
+            <th th:text="#{trade.askName}">Buy</th>
+            <th th:text="#{trade.bidName}">Sell</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="crypto : ${cryptocurrencies}">
+            <td th:text="${crypto.key.symbol}">btc</td>
+            <td th:text="${crypto.value[0]}">60600</td>
+            <td th:text="${crypto.value[1]}">59400</td>
+        </tr>
+        </tbody>
+    </table>
 
     <br>
+    <br>
 
-    <a href="/" th:href="@{/trade}">Trade</a>
-
+    <a href="/" th:href="@{/}">Back to home page</a>
 </body>
 </html>
