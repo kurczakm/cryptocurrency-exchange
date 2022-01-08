@@ -34,7 +34,7 @@ public class Wallet {
 
     public Wallet() {
         ownedCrypto = new HashMap<>();
-        operations = new HashSet<>();
+        operations = new LinkedHashSet<>();
     }
 
     public Wallet(BigDecimal funds, Map<Cryptocurrency, BigDecimal> ownedCrypto, Set<Operation> operations) {
@@ -46,10 +46,10 @@ public class Wallet {
     public Wallet(BigDecimal funds, List<Cryptocurrency> cryptocurrencies) {
         this.funds = funds;
         this.ownedCrypto = new HashMap<>();
-
         for (Cryptocurrency cryptocurrency : cryptocurrencies) {
             ownedCrypto.put(cryptocurrency, BigDecimal.ZERO);
         }
+        this.operations = new LinkedHashSet<>();
     }
 
     public Long getId() {

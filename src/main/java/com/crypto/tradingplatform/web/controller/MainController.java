@@ -53,13 +53,11 @@ public class MainController {
 
     @GetMapping("/wallet")
     public String showWallet() {
-        System.out.println(market.getPrices().toString());
         return "wallet";
     }
 
     @GetMapping("/trade")
     public String showTrade(Model model) {
-//        walletService.makeOperation((long) 1, cryptocurrencyRepository.getById((long) 1), BigDecimal.ONE, new BigDecimal(-1));
         model.addAttribute("operation", new OperationDto());
         return "trade";
     }
@@ -84,7 +82,6 @@ public class MainController {
                 operationDto.getAmount().negate(),
                 operationDto.getAmount().multiply(operationDto.getPriceNumber())
         );
-        System.out.println(operationDto);
         return "redirect:trade?success";
     }
 
@@ -94,5 +91,10 @@ public class MainController {
         model.addAttribute("wallets", ranking);
 
         return "ranking";
+    }
+
+    @GetMapping("/history")
+    public String showHistory() {
+        return "history";
     }
 }
