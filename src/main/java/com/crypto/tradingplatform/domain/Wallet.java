@@ -26,9 +26,11 @@ public class Wallet {
     @Column(name = "amount")
     private Map<Cryptocurrency, BigDecimal> ownedCrypto;
 
-
     @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
     private Set<Operation> operations;
+
+    @Transient
+    private BigDecimal value;
 
     public Wallet() {
         ownedCrypto = new HashMap<>();
@@ -80,5 +82,13 @@ public class Wallet {
 
     public void setOperations(Set<Operation> operations) {
         this.operations = operations;
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 }

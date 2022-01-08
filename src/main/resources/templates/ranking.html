@@ -17,19 +17,28 @@
     <br>
     <br>
 
-    <h1>WELCOME</h1> <span th:text="${user.name}">email</span>
+    <h1>Ranking</h1>
 
     <br>
 
-    <a href="/" th:href="@{/wallet}">Wallet</a>
+    <table>
+        <thead>
+            <tr>
+                <th th:text="#{ranking.usernameName}">Cryptocurrency</th>
+                <th th:text="#{ranking.valueName}">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="wallet : ${wallets}">
+                <td th:text="${wallet.key}">btc</td>
+                <td th:text="${wallet.value}">1.0</td>
+            </tr>
+        </tbody>
+    </table>
 
     <br>
-
-    <a href="/" th:href="@{/trade}">Trade</a>
-
     <br>
 
-    <a href="/" th:href="@{/ranking}">Ranking</a>
-
+    <a href="/" th:href="@{/}">Back to home page</a>
 </body>
 </html>
