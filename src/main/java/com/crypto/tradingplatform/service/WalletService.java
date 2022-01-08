@@ -28,9 +28,6 @@ public class WalletService {
         BigDecimal newFunds = ownedFunds.add(volume);
         BigDecimal newCryptoAmount = ownedCryptoAmount.add(amount);
 
-//        System.out.println("ownedFunds: " + ownedFunds);
-//        System.out.println("ownedCryptoAmount: " + ownedCryptoAmount);
-
         if (newFunds.compareTo(BigDecimal.ZERO) >= 0 && newCryptoAmount.compareTo(BigDecimal.ZERO) >= 0) {
             Operation operation = new Operation();
             operation.setCryptocurrency(cryptocurrency);
@@ -41,7 +38,9 @@ public class WalletService {
             operation.setWallet(wallet);
             wallet.setFunds(newFunds);
             wallet.getOwnedCrypto().put(cryptocurrency, newCryptoAmount);
+            wallet.getOperations().add(operation);
             walletRepository.save(wallet);
+
         } else {
             status = false;
         }

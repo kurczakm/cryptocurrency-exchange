@@ -27,7 +27,7 @@ public class Wallet {
     private Map<Cryptocurrency, BigDecimal> ownedCrypto;
 
 
-    @OneToMany(mappedBy = "wallet")
+    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
     private Set<Operation> operations;
 
     public Wallet() {

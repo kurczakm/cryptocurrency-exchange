@@ -35,6 +35,56 @@
             <td th:text="${crypto.key.symbol}">btc</td>
             <td th:text="${crypto.value[0]}">60600</td>
             <td th:text="${crypto.value[1]}">59400</td>
+
+            <form th:action="@{/buy}" method="post" th:object="${operation}">
+                <input type="hidden" name="cryptocurrencyId" th:value="${crypto.key.id}">
+                <input type="hidden" name="price" th:value="${crypto.value[0]}">
+                <td>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="amount" placeholder="amount">
+                    </div>
+                </td>
+                <td>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Buy</button>
+                    </div>
+                </td>
+            </form>
+
+            <form th:action="@{/sell}" method="post" th:object="${operation}">
+                <input type="hidden" name="cryptocurrencyId" th:value="${crypto.key.id}">
+                <input type="hidden" name="price" th:value="${crypto.value[1]}">
+                <td>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="amount" placeholder="amount">
+                    </div>
+                </td>
+                <td>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Sell</button>
+                    </div>
+                </td>
+            </form>
+
+
+<!--            <form th:action="@{/}" method="post" th:object="${operation}">-->
+<!--                <input type="hidden" name="cryptocurrencyId" th:value="${crypto.key.id}">-->
+<!--                <td>-->
+<!--                    <div class="mb-3">-->
+<!--                        <input type="number" class="form-control" name="amount" placeholder="amount">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <div class="mb-3">-->
+<!--                        <button type="submit" th:formaction="@{/buy}" class="btn btn-primary">Buy</button>-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <div class="mb-3">-->
+<!--                        <button type="submit" th:formaction="@{/sell}" class="btn btn-primary">Sell</button>-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--            </form>-->
         </tr>
         </tbody>
     </table>
