@@ -73,11 +73,10 @@ public class UserServiceImpl implements UserService{
     }
 
     public User findByEmail(String email) {
-        User user = userRepository.findByEmail(email);
+        return userRepository.findByEmail(email);
+    }
 
-        if(user == null)
-            throw new UsernameNotFoundException("Invalid email");
-
-        return user;
+    public User findByName(String name) {
+        return userRepository.findByName(name);
     }
 }

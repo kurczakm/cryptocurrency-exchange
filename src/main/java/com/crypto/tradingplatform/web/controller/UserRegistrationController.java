@@ -1,6 +1,6 @@
 package com.crypto.tradingplatform.web.controller;
 
-import com.crypto.tradingplatform.service.UserService;
+import com.crypto.tradingplatform.service.UserServiceImpl;
 import com.crypto.tradingplatform.web.dto.UserRegistrationDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/registration")
 public class UserRegistrationController {
 
-    private UserService userService;
+    private UserServiceImpl userService;
 
-    public UserRegistrationController(UserService userService) {
+    public UserRegistrationController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
@@ -27,7 +27,26 @@ public class UserRegistrationController {
 
     @PostMapping
     public String registerUserAccount(@ModelAttribute("user") UserRegistrationDto userRegistrationDto) {
-        userService.save(userRegistrationDto);
-        return "redirect:/registration?success";
+        String url = "redirect:/registration";
+        boolean status = true;
+
+        if (userService.findByName(userRegistrationDto.getName()) != null) {
+            url += "?takenName";
+            status = false;
+        }
+        if (userService.findByEmail(userRegistrationDto.getEmail()) != null) {
+            if(status)
+                url += "?takenEmail";
+            else
+                url += "&takenEmail";
+            status = false;
+        }
+
+        if(status) {
+            userService.save(userRegistrationDto);
+            url += "?success";
+        }
+
+        return url;
     }
 }

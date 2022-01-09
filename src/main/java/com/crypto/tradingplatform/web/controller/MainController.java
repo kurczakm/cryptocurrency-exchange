@@ -2,7 +2,6 @@ package com.crypto.tradingplatform.web.controller;
 
 import com.crypto.tradingplatform.domain.Cryptocurrency;
 import com.crypto.tradingplatform.domain.User;
-import com.crypto.tradingplatform.domain.Wallet;
 import com.crypto.tradingplatform.market.Market;
 import com.crypto.tradingplatform.repository.CryptocurrencyRepository;
 import com.crypto.tradingplatform.service.UserServiceImpl;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -70,7 +68,6 @@ public class MainController {
                 operationDto.getAmount(),
                 operationDto.getAmount().multiply(operationDto.getPriceNumber()).negate()
         );
-        System.out.println(operationDto);
         return "redirect:trade?success";
     }
 
@@ -89,7 +86,6 @@ public class MainController {
     public String showRanking(Model model) {
         Map<String, BigDecimal> ranking = walletService.getSortedWallets();
         model.addAttribute("wallets", ranking);
-
         return "ranking";
     }
 

@@ -3,7 +3,6 @@ package com.crypto.tradingplatform.domain;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Collection;
 
 @Entity
