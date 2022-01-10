@@ -6,6 +6,7 @@ import com.crypto.tradingplatform.repository.RoleRepository;
 import com.crypto.tradingplatform.repository.UserRepository;
 import com.crypto.tradingplatform.web.detail.CustomUserDetails;
 import com.crypto.tradingplatform.web.dto.UserRegistrationDto;
+import com.crypto.tradingplatform.web.dto.UserUpdateDto;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
+        User user = userRepository.findByName(username);
 
         if(user == null)
             throw new UsernameNotFoundException("Invalid username or password.");
@@ -78,5 +79,17 @@ public class UserServiceImpl implements UserService{
 
     public User findByName(String name) {
         return userRepository.findByName(name);
+    }
+
+    public User updatePassword(UserUpdateDto userUpdateDto) {
+        User user = userRepository.findByName(userUpdateDto.getName());
+        user.setPassword(passwordEncoder().encode(userUpdateDto.getNewPassword()));
+        return userRepository.save(user);
+    }
+
+    public User updateEmail(UserUpdateDto userUpdateDto) {
+        User user = userRepository.findByName(userUpdateDto.getName());
+        user.setEmail(userUpdateDto.getNewEmail());
+        return userRepository.save(user);
     }
 }

@@ -8,6 +8,7 @@ import com.crypto.tradingplatform.service.UserServiceImpl;
 import com.crypto.tradingplatform.service.WalletService;
 import com.crypto.tradingplatform.web.detail.CustomUserDetails;
 import com.crypto.tradingplatform.web.dto.OperationDto;
+import com.crypto.tradingplatform.web.dto.UserUpdateDto;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +37,7 @@ public class MainController {
     @ModelAttribute("user")
     public User user() {
         CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.findByEmail(userDetails.getUsername());
+        return userService.findByName(userDetails.getUsername());
     }
 
     @ModelAttribute("cryptocurrencies")
@@ -92,5 +93,36 @@ public class MainController {
     @GetMapping("/history")
     public String showHistory() {
         return "history";
+    }
+
+    @GetMapping("/account")
+    public String showAccount() {
+        return "account";
+    }
+
+    @GetMapping("/account/password")
+    public String showPasswordForm(Model model) {
+        model.addAttribute("updateUser", new UserUpdateDto());
+        return "password";
+    }
+
+    @PostMapping("/account/password")
+    public String changePassword(@ModelAttribute("updateUser") UserUpdateDto updatedUser) {
+        updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
+        userService.updatePassword(updatedUser);
+        return "redirect:password?success";
+    }
+
+    @GetMapping("/account/email")
+    public String showEmailForm(Model model) {
+        model.addAttribute("updateUser", new UserUpdateDto());
+        return "email";
+    }
+
+    @PostMapping("/account/email")
+    public String changeEmail(@ModelAttribute("updateUser") UserUpdateDto updatedUser) {
+        updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
+        userService.updateEmail(updatedUser);
+        return "redirect:email?success";
     }
 }
