@@ -63,23 +63,28 @@ public class MainController {
 
     @PostMapping("/buy")
     public String buy(@ModelAttribute("operation") OperationDto operationDto) {
-        walletService.makeOperation(
-                user().getWallet().getId(),
-                cryptocurrencyRepository.getById(operationDto.getCryptocurrencyId()),
-                operationDto.getAmount(),
-                operationDto.getAmount().multiply(operationDto.getPriceNumber()).negate()
-        );
+//        walletService.makeOperation(
+//                user().getWallet().getId(),
+//                cryptocurrencyRepository.getById(operationDto.getCryptocurrencyId()),
+//                operationDto.getAmount(),
+//                operationDto.getAmount().multiply(operationDto.getPrice()).negate()
+//        );
+//        walletService.buyCrypto(user().getWallet().getId(), operationDto);
+        walletService.tryMakeOperation(user().getWallet().getId(), operationDto, true);
         return "redirect:trade?success";
     }
 
     @PostMapping("/sell")
     public String sell(@ModelAttribute("operation") OperationDto operationDto) {
-        walletService.makeOperation(
-                user().getWallet().getId(),
-                cryptocurrencyRepository.getById(operationDto.getCryptocurrencyId()),
-                operationDto.getAmount().negate(),
-                operationDto.getAmount().multiply(operationDto.getPriceNumber())
-        );
+//        walletService.makeOperation(
+//                user().getWallet().getId(),
+//                cryptocurrencyRepository.getById(operationDto.getCryptocurrencyId()),
+//                operationDto.getAmount().negate(),
+//                operationDto.getAmount().multiply(operationDto.getPrice())
+//        );
+//        System.out.println(operationDto);
+//        walletService.sellCrypto(user().getWallet().getId(), operationDto);
+        walletService.tryMakeOperation(user().getWallet().getId(), operationDto, false);
         return "redirect:trade?success";
     }
 

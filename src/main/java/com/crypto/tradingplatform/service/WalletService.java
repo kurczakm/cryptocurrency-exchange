@@ -4,8 +4,10 @@ import com.crypto.tradingplatform.domain.Cryptocurrency;
 import com.crypto.tradingplatform.domain.Operation;
 import com.crypto.tradingplatform.domain.Wallet;
 import com.crypto.tradingplatform.market.Market;
+import com.crypto.tradingplatform.repository.CryptocurrencyRepository;
 import com.crypto.tradingplatform.repository.UserRepository;
 import com.crypto.tradingplatform.repository.WalletRepository;
+import com.crypto.tradingplatform.web.dto.OperationDto;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,11 +21,34 @@ public class WalletService {
     private WalletRepository walletRepository;
     private Market market;
     private UserRepository userRepository;
+    private CryptocurrencyRepository cryptocurrencyRepository;
 
-    public WalletService(WalletRepository walletRepository, Market market, UserRepository userRepository) {
+    public WalletService(WalletRepository walletRepository, Market market, UserRepository userRepository, CryptocurrencyRepository cryptocurrencyRepository) {
         this.walletRepository = walletRepository;
         this.market = market;
         this.userRepository = userRepository;
+        this.cryptocurrencyRepository = cryptocurrencyRepository;
+    }
+
+    public Map<String, BigDecimal> getSortedWallets() {
+        List<Wallet> wallets = walletRepository.findAll();
+        Map<Cryptocurrency, BigDecimal[]> prices = market.getPrices();
+
+
+        for (Wallet wallet : wallets) {
+            wallet.setValue(wallet.getFunds());
+            wallet.getOwnedCrypto().forEach((k,v) -> wallet.setValue(wallet.getValue().add(prices.get(k)[1].multiply(v))));
+        }
+
+        wallets.sort((w1, w2) -> w2.getValue().compareTo(w1.getValue()));
+
+        Map<String, BigDecimal> ranking = new LinkedHashMap<>();
+
+        for (Wallet wallet : wallets) {
+            ranking.put(userRepository.findByWalletId(wallet.getId()).getName(), wallet.getValue());
+        }
+
+        return ranking;
     }
 
     public boolean makeOperation(Long walletId, Cryptocurrency cryptocurrency, BigDecimal amount, BigDecimal volume) {
@@ -57,24 +82,28 @@ public class WalletService {
         return status;
     }
 
-    public Map<String, BigDecimal> getSortedWallets() {
-        List<Wallet> wallets = walletRepository.findAll();
-        Map<Cryptocurrency, BigDecimal[]> prices = market.getPrices();
+    //mode true = buy crypto / false = sell crypto
+    public boolean tryMakeOperation(Long walletId, OperationDto operationDto, boolean mode) {
+        boolean status = true;
+        if (operationDto.isCorrectInput()) {
+            BigDecimal amount = new BigDecimal(operationDto.getAmount());
+            if (amount.compareTo(BigDecimal.ZERO) > 0) {
+                BigDecimal volume = amount.multiply(operationDto.getPrice());
+                if (mode)
+                    volume = volume.negate();
+                else
+                    amount = amount.negate();
 
-
-        for (Wallet wallet : wallets) {
-            wallet.setValue(wallet.getFunds());
-            wallet.getOwnedCrypto().forEach((k,v) -> wallet.setValue(wallet.getValue().add(prices.get(k)[1].multiply(v))));
-        }
-
-        wallets.sort((w1, w2) -> w2.getValue().compareTo(w1.getValue()));
-
-        Map<String, BigDecimal> ranking = new LinkedHashMap<>();
-
-        for (Wallet wallet : wallets) {
-            ranking.put(userRepository.findByWalletId(wallet.getId()).getName(), wallet.getValue());
-        }
-
-        return ranking;
+                makeOperation(
+                        walletId,
+                        cryptocurrencyRepository.getById(operationDto.getCryptocurrencyId()),
+                        amount,
+                        volume
+                );
+            } else
+                status = false;
+        } else
+            status = false;
+        return status;
     }
 }

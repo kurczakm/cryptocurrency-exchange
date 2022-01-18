@@ -1,31 +1,28 @@
 package com.crypto.tradingplatform.web.dto;
 
-import com.crypto.tradingplatform.domain.Cryptocurrency;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
 
 public class OperationDto {
 
-    private BigDecimal amount;
+    private String amount;
     private Long cryptocurrencyId;
-    private String price;
+    private BigDecimal price;
+    //result of amount input validation
+    private boolean correctInput;
 
     public OperationDto() {
-        price = "0";
+        correctInput = true;
     }
 
-    public OperationDto(BigDecimal amount, Long cryptocurrencyId, String price) {
-        this.amount = amount;
-        this.cryptocurrencyId = cryptocurrencyId;
-        this.price = price;
-    }
-
-    public BigDecimal getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
+        checkAmount();
     }
 
     public Long getCryptocurrencyId() {
@@ -36,24 +33,33 @@ public class OperationDto {
         this.cryptocurrencyId = cryptocurrencyId;
     }
 
-    public String getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public BigDecimal getPriceNumber() {
-        return new BigDecimal(price);
+    public boolean isCorrectInput() {
+        return correctInput;
+    }
+
+    public void setCorrectInput(boolean correctInput) {
+        this.correctInput = correctInput;
+    }
+
+    public void checkAmount() {
+        correctInput = NumberUtils.isCreatable(amount);
     }
 
     @Override
     public String toString() {
         return "OperationDto{" +
-                "amount=" + amount +
+                "amount='" + amount + '\'' +
                 ", cryptocurrencyId=" + cryptocurrencyId +
-                ", price='" + price + '\'' +
+                ", price=" + price +
+                ", correctInput=" + correctInput +
                 '}';
     }
 }
