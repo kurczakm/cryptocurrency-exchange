@@ -1,5 +1,6 @@
 package com.crypto.tradingplatform.web.controller;
 
+import com.crypto.tradingplatform.domain.User;
 import com.crypto.tradingplatform.service.UserServiceImpl;
 import com.crypto.tradingplatform.web.dto.UserRegistrationDto;
 import org.springframework.stereotype.Controller;
@@ -43,8 +44,8 @@ public class UserRegistrationController {
         }
 
         if(status) {
-            userService.save(userRegistrationDto);
-            url += "?success";
+            User user = userService.save(userRegistrationDto);
+            url = user != null ? url+"?success" : "redirect:/registration?fail";
         }
 
         return url;

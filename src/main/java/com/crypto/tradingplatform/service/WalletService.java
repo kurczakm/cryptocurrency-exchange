@@ -34,7 +34,6 @@ public class WalletService {
         List<Wallet> wallets = walletRepository.findAll();
         Map<Cryptocurrency, BigDecimal[]> prices = market.getPrices();
 
-
         for (Wallet wallet : wallets) {
             wallet.setValue(wallet.getFunds());
             wallet.getOwnedCrypto().forEach((k,v) -> wallet.setValue(wallet.getValue().add(prices.get(k)[1].multiply(v))));

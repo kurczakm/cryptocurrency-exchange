@@ -26,6 +26,11 @@
                     <div class="alert alert-info">You've successfully changed email address!</div>
                 </div>
 
+                <!--fail message-->
+                <div th:if="${param.fail}">
+                    <div class="alert alert-danger">Invalid email address format!</div>
+                </div>
+
                 <h1>Change email</h1>
 
                 <form th:action="@{/account/email}" method="post" th:object="${updateUser}">

@@ -127,7 +127,6 @@ public class MainController {
     @PostMapping("/account/email")
     public String changeEmail(@ModelAttribute("updateUser") UserUpdateDto updatedUser) {
         updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
-        userService.updateEmail(updatedUser);
-        return "redirect:email?success";
+        return userService.updateEmail(updatedUser) != null ? "redirect:email?success" : "redirect:email?fail";
     }
 }

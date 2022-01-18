@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,18 +42,25 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User save(UserRegistrationDto userRegistrationDto) {
-        List<Cryptocurrency> cryptocurrencies = cryptocurrencyRepository.findAll();
-        Wallet wallet = new Wallet(startFunds, cryptocurrencies);
+        String email = userRegistrationDto.getEmail();
+        User result = null;
 
-        User user = new User(
-                userRegistrationDto.getEmail(),
-                userRegistrationDto.getName(),
-                passwordEncoder().encode(userRegistrationDto.getPassword()),
-                Arrays.asList(roleRepository.getById((long) 1)),
-                wallet
-        );
+        if(validateEmail(email)) {
+            List<Cryptocurrency> cryptocurrencies = cryptocurrencyRepository.findAll();
+            Wallet wallet = new Wallet(startFunds, cryptocurrencies);
 
-        return userRepository.save(user);
+            User user = new User(
+                    email,
+                    userRegistrationDto.getName(),
+                    passwordEncoder().encode(userRegistrationDto.getPassword()),
+                    Arrays.asList(roleRepository.getById((long) 1)),
+                    wallet
+            );
+
+            result = userRepository.save(user);
+        }
+
+        return result;
     }
 
     @Override
@@ -88,8 +96,19 @@ public class UserServiceImpl implements UserService{
     }
 
     public User updateEmail(UserUpdateDto userUpdateDto) {
-        User user = userRepository.findByName(userUpdateDto.getName());
-        user.setEmail(userUpdateDto.getNewEmail());
-        return userRepository.save(user);
+        String newEmail = userUpdateDto.getNewEmail();
+        User result = null;
+        if(validateEmail(newEmail)) {
+            User user = userRepository.findByName(userUpdateDto.getName());
+            user.setEmail(newEmail);
+            result = userRepository.save(user);
+        }
+
+        return result;
+    }
+
+    private boolean validateEmail(String email) {
+        Pattern emailPattern = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+        return emailPattern.matcher(email).matches();
     }
 }
