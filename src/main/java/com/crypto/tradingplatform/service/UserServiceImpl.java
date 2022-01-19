@@ -44,15 +44,16 @@ public class UserServiceImpl implements UserService{
     public User save(UserRegistrationDto userRegistrationDto) {
         String email = userRegistrationDto.getEmail();
         String password = userRegistrationDto.getPassword();
+        String username = userRegistrationDto.getName();
         User result = null;
 
-        if(validateEmail(email) && validatePassword(password)) {
+        if(validateEmail(email) && validatePassword(password) && validateUsername(username)) {
             List<Cryptocurrency> cryptocurrencies = cryptocurrencyRepository.findAll();
             Wallet wallet = new Wallet(startFunds, cryptocurrencies);
 
             User user = new User(
                     email,
-                    userRegistrationDto.getName(),
+                    username,
                     passwordEncoder().encode(password),
                     Arrays.asList(roleRepository.getById((long) 1)),
                     wallet
@@ -121,5 +122,10 @@ public class UserServiceImpl implements UserService{
     private boolean validatePassword(String password) {
         Pattern passwordPattern = Pattern.compile("^.{6,128}$");
         return passwordPattern.matcher(password).matches();
+    }
+
+    private boolean validateUsername(String username) {
+        Pattern passwordPattern = Pattern.compile("^[0-9a-zA-Z]{1,15}$");
+        return passwordPattern.matcher(username).matches();
     }
 }
