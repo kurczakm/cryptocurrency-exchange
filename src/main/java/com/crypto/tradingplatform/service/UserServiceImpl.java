@@ -43,16 +43,17 @@ public class UserServiceImpl implements UserService{
     @Override
     public User save(UserRegistrationDto userRegistrationDto) {
         String email = userRegistrationDto.getEmail();
+        String password = userRegistrationDto.getPassword();
         User result = null;
 
-        if(validateEmail(email)) {
+        if(validateEmail(email) && validatePassword(password)) {
             List<Cryptocurrency> cryptocurrencies = cryptocurrencyRepository.findAll();
             Wallet wallet = new Wallet(startFunds, cryptocurrencies);
 
             User user = new User(
                     email,
                     userRegistrationDto.getName(),
-                    passwordEncoder().encode(userRegistrationDto.getPassword()),
+                    passwordEncoder().encode(password),
                     Arrays.asList(roleRepository.getById((long) 1)),
                     wallet
             );
@@ -90,9 +91,14 @@ public class UserServiceImpl implements UserService{
     }
 
     public User updatePassword(UserUpdateDto userUpdateDto) {
-        User user = userRepository.findByName(userUpdateDto.getName());
-        user.setPassword(passwordEncoder().encode(userUpdateDto.getNewPassword()));
-        return userRepository.save(user);
+        String newPassword = userUpdateDto.getNewPassword();
+        User result = null;
+        if(validatePassword(newPassword)) {
+            User user = userRepository.findByName(userUpdateDto.getName());
+            user.setPassword(passwordEncoder().encode(newPassword));
+            result = userRepository.save(user);
+        }
+        return result;
     }
 
     public User updateEmail(UserUpdateDto userUpdateDto) {
@@ -110,5 +116,10 @@ public class UserServiceImpl implements UserService{
     private boolean validateEmail(String email) {
         Pattern emailPattern = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
         return emailPattern.matcher(email).matches();
+    }
+
+    private boolean validatePassword(String password) {
+        Pattern passwordPattern = Pattern.compile("^.{6,128}$");
+        return passwordPattern.matcher(password).matches();
     }
 }

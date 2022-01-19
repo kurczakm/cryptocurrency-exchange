@@ -114,8 +114,7 @@ public class MainController {
     @PostMapping("/account/password")
     public String changePassword(@ModelAttribute("updateUser") UserUpdateDto updatedUser) {
         updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
-        userService.updatePassword(updatedUser);
-        return "redirect:password?success";
+        return userService.updatePassword(updatedUser) != null ? "redirect:password?success" : "redirect:password?fail";
     }
 
     @GetMapping("/account/email")
