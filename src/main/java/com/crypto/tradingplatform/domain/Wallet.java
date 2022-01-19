@@ -27,6 +27,7 @@ public class Wallet {
     private Map<Cryptocurrency, BigDecimal> ownedCrypto;
 
     @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
+    @OrderBy(value = "date DESC")
     private Set<Operation> operations;
 
     @Transient
@@ -37,7 +38,7 @@ public class Wallet {
         operations = new LinkedHashSet<>();
     }
 
-    public Wallet(BigDecimal funds, Map<Cryptocurrency, BigDecimal> ownedCrypto, Set<Operation> operations) {
+    public Wallet(BigDecimal funds, Map<Cryptocurrency, BigDecimal> ownedCrypto, LinkedHashSet<Operation> operations) {
         this.funds = funds;
         this.ownedCrypto = ownedCrypto;
         this.operations = operations;
@@ -80,7 +81,7 @@ public class Wallet {
         return operations;
     }
 
-    public void setOperations(Set<Operation> operations) {
+    public void setOperations(LinkedHashSet<Operation> operations) {
         this.operations = operations;
     }
 
