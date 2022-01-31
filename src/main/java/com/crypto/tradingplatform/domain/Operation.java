@@ -27,19 +27,19 @@ public class Operation {
     @NotNull
     private Cryptocurrency cryptocurrency;
 
-    @Column(name = "amount")
+    @Column(name = "amount", precision = 19, scale = 8)
     @NotNull
     private BigDecimal amount;
 
-    @Column(name = "volume")
+    @Column(name = "volume", precision = 19, scale = 2)
     @NotNull
     private BigDecimal volume;
 
-    @Column(name = "crypto_saldo")
+    @Column(name = "crypto_saldo", precision = 19, scale = 8)
     @NotNull
     private BigDecimal cryptoSaldo;
 
-    @Column(name = "funds_saldo")
+    @Column(name = "funds_saldo", precision = 19, scale = 2)
     @NotNull
     private BigDecimal fundsSaldo;
 

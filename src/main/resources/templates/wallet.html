@@ -35,7 +35,7 @@
         <tbody>
             <tr th:each="crypto : ${user.wallet.ownedCrypto}">
                 <td th:text="${crypto.key.symbol}">btc</td>
-                <td th:text="${crypto.value}">1.0</td>
+                <td th:text="${#numbers.formatDecimal(crypto.value, 1, 'WHITESPACE', 8, 'POINT')}">1.0</td>
             </tr>
         </tbody>
     </table>

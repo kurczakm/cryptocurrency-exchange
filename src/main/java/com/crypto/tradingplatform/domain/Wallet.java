@@ -15,7 +15,7 @@ public class Wallet {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "funds")
+    @Column(name = "funds", precision = 19, scale = 2)
     @NotNull
     private BigDecimal funds;
 
@@ -23,7 +23,7 @@ public class Wallet {
     @CollectionTable(name = "cryptocurrency_amount_mapping",
                     joinColumns = {@JoinColumn(name = "wallet_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "cryptocurrency_id")
-    @Column(name = "amount")
+    @Column(name = "amount", precision = 19, scale = 8)
     private Map<Cryptocurrency, BigDecimal> ownedCrypto;
 
     @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)

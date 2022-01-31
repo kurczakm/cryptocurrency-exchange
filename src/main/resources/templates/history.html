@@ -35,9 +35,9 @@
     <tbody>
     <tr th:each="operation : ${user.wallet.operations}">
         <td th:text="${operation.cryptocurrency.symbol}">btc</td>
-        <td th:text="${operation.amount}">1.0</td>
+        <td th:text="${#numbers.formatDecimal(operation.amount, 1, 'WHITESPACE', 8, 'POINT')}">1.0</td>
         <td th:text="${operation.volume}">42012.24</td>
-        <td th:text="${operation.cryptoSaldo}">1.2</td>
+        <td th:text="${#numbers.formatDecimal(operation.cryptoSaldo, 1, 'WHITESPACE', 8, 'POINT')}">1.2</td>
         <td th:text="${operation.fundsSaldo}">234.94</td>
         <td th:text="${operation.date}">2022-01-08 21:17:18</td>
     </tr>

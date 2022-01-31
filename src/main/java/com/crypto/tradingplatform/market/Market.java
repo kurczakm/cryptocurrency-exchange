@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,9 +42,9 @@ public class Market {
             BigDecimal price = getPrice(cryptocurrency.getName());
             BigDecimal[] prices = new BigDecimal[2];
             //ask za tyle kupujemy
-            prices[0] = price.multiply(BigDecimal.valueOf(1.01));
+            prices[0] = price.multiply(BigDecimal.valueOf(1.01)).setScale(2, RoundingMode.HALF_UP);
             //bid za tyle sprzedajemy
-            prices[1] = price.multiply(BigDecimal.valueOf(0.99));
+            prices[1] = price.multiply(BigDecimal.valueOf(0.99)).setScale(2, RoundingMode.HALF_UP);
             currentPrices.put(cryptocurrency, prices);
         }
         prices = currentPrices;

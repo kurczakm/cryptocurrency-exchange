@@ -11,6 +11,7 @@ import com.crypto.tradingplatform.web.dto.OperationDto;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,12 +87,17 @@ public class WalletService {
         boolean status = true;
         if (operationDto.isCorrectInput()) {
             BigDecimal amount = new BigDecimal(operationDto.getAmount());
-            if (amount.compareTo(BigDecimal.ZERO) > 0) {
+            if (amount.compareTo(BigDecimal.ZERO) > 0 && amount.scale() <= 8) {
                 BigDecimal volume = amount.multiply(operationDto.getPrice());
                 if (mode)
                     volume = volume.negate();
                 else
                     amount = amount.negate();
+
+                //rounding
+                volume = volume.setScale(2, RoundingMode.FLOOR);
+
+                System.out.println("VOL: " + volume);
 
                 makeOperation(
                         walletId,

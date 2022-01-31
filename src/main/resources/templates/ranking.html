@@ -31,7 +31,7 @@
         <tbody>
             <tr th:each="wallet : ${wallets}">
                 <td th:text="${wallet.key}">btc</td>
-                <td th:text="${wallet.value}">1.0</td>
+                <td th:text="${#numbers.formatDecimal(wallet.value == null ? 0 : wallet.value, 0, 2)}">1.0</td>
             </tr>
         </tbody>
     </table>
