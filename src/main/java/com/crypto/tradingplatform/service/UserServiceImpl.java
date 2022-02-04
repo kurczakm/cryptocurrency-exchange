@@ -4,7 +4,8 @@ import com.crypto.tradingplatform.domain.*;
 import com.crypto.tradingplatform.repository.CryptocurrencyRepository;
 import com.crypto.tradingplatform.repository.RoleRepository;
 import com.crypto.tradingplatform.repository.UserRepository;
-import com.crypto.tradingplatform.web.detail.CustomUserDetails;
+import com.crypto.tradingplatform.repository.VerificationTokenRepository;
+import com.crypto.tradingplatform.config.CustomUserDetails;
 import com.crypto.tradingplatform.web.dto.UserRegistrationDto;
 import com.crypto.tradingplatform.web.dto.UserUpdateDto;
 import org.springframework.context.annotation.Bean;
@@ -26,13 +27,15 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private CryptocurrencyRepository cryptocurrencyRepository;
+    private VerificationTokenRepository verificationTokenRepository;
 
     private final BigDecimal startFunds = new BigDecimal(1000);
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, CryptocurrencyRepository cryptocurrencyRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, CryptocurrencyRepository cryptocurrencyRepository, VerificationTokenRepository verificationTokenRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.cryptocurrencyRepository = cryptocurrencyRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
     }
 
     @Bean
@@ -127,5 +130,27 @@ public class UserServiceImpl implements UserService{
     private boolean validateUsername(String username) {
         Pattern passwordPattern = Pattern.compile("^[0-9a-zA-Z]{1,15}$");
         return passwordPattern.matcher(username).matches();
+    }
+
+    public void createVerificationToken(User user, String token) {
+        VerificationToken myToken = new VerificationToken(user, token);
+        verificationTokenRepository.save(myToken);
+    }
+
+    public VerificationToken getVerificationToken(String token) {
+        return verificationTokenRepository.findByToken(token);
+    }
+
+    public void deleteVerificationToken(VerificationToken token) {
+        verificationTokenRepository.delete(token);
+    }
+
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    public void generateNewVerificationToken(User user, VerificationToken existingToken, String newToken) {
+        verificationTokenRepository.delete(existingToken);
+        createVerificationToken(user, newToken);
     }
 }

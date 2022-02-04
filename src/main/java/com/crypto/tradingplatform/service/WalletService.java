@@ -2,6 +2,7 @@ package com.crypto.tradingplatform.service;
 
 import com.crypto.tradingplatform.domain.Cryptocurrency;
 import com.crypto.tradingplatform.domain.Operation;
+import com.crypto.tradingplatform.domain.User;
 import com.crypto.tradingplatform.domain.Wallet;
 import com.crypto.tradingplatform.market.Market;
 import com.crypto.tradingplatform.repository.CryptocurrencyRepository;
@@ -31,7 +32,7 @@ public class WalletService {
         this.cryptocurrencyRepository = cryptocurrencyRepository;
     }
 
-    public Map<String, BigDecimal> getSortedWallets() {
+    public Map<String, BigDecimal> getSortedActiveWallets() {
         List<Wallet> wallets = walletRepository.findAll();
         Map<Cryptocurrency, BigDecimal[]> prices = market.getPrices();
 
@@ -45,7 +46,9 @@ public class WalletService {
         Map<String, BigDecimal> ranking = new LinkedHashMap<>();
 
         for (Wallet wallet : wallets) {
-            ranking.put(userRepository.findByWalletId(wallet.getId()).getName(), wallet.getValue());
+            User user = userRepository.findByWalletId(wallet.getId());
+            if (user.isEnabled())
+                ranking.put(user.getName(), wallet.getValue());
         }
 
         return ranking;
@@ -96,8 +99,6 @@ public class WalletService {
 
                 //rounding
                 volume = volume.setScale(2, RoundingMode.FLOOR);
-
-                System.out.println("VOL: " + volume);
 
                 makeOperation(
                         walletId,

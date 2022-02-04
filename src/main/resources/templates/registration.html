@@ -22,11 +22,6 @@
         <div class="row">
             <div class="col-md-6 offset-md-3">
 
-                <!--success message-->
-                <div th:if="${param.success}">
-                    <div class="alert alert-info">You've successfully registered!</div>
-                </div>
-
                 <!--fail message-->
                 <div th:if="${param.fail}">
                     <div class="alert alert-danger">Invalid user data!</div>

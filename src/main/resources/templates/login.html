@@ -24,9 +24,19 @@
 
                 <h1>Login</h1>
 
-                <!--error message-->
-                <div th:if="${param.error}">
+                <!--credentials error message-->
+                <div th:if="${(param.error != null) and (param.error[0]=='badCredentials')}">
                     <div class="alert alert-danger">Invalid username or password!</div>
+                </div>
+
+                <!--credentials error message-->
+                <div th:if="${(param.error != null) and (param.error[0]=='disabled')}">
+                    <div class="alert alert-danger">You must confirm your email address!</div>
+                </div>
+
+                <!--credentials error message-->
+                <div th:if="${(param.error != null) and (param.error[0]=='true')}">
+                    <div class="alert alert-danger">You cannot log in!</div>
                 </div>
 
                 <!--logout message-->

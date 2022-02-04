@@ -6,7 +6,7 @@ import com.crypto.tradingplatform.market.Market;
 import com.crypto.tradingplatform.repository.CryptocurrencyRepository;
 import com.crypto.tradingplatform.service.UserServiceImpl;
 import com.crypto.tradingplatform.service.WalletService;
-import com.crypto.tradingplatform.web.detail.CustomUserDetails;
+import com.crypto.tradingplatform.config.CustomUserDetails;
 import com.crypto.tradingplatform.web.dto.OperationDto;
 import com.crypto.tradingplatform.web.dto.UserUpdateDto;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -63,34 +63,19 @@ public class MainController {
 
     @PostMapping("/buy")
     public String buy(@ModelAttribute("operation") OperationDto operationDto) {
-//        walletService.makeOperation(
-//                user().getWallet().getId(),
-//                cryptocurrencyRepository.getById(operationDto.getCryptocurrencyId()),
-//                operationDto.getAmount(),
-//                operationDto.getAmount().multiply(operationDto.getPrice()).negate()
-//        );
-//        walletService.buyCrypto(user().getWallet().getId(), operationDto);
         walletService.tryMakeOperation(user().getWallet().getId(), operationDto, true);
         return "redirect:trade?success";
     }
 
     @PostMapping("/sell")
     public String sell(@ModelAttribute("operation") OperationDto operationDto) {
-//        walletService.makeOperation(
-//                user().getWallet().getId(),
-//                cryptocurrencyRepository.getById(operationDto.getCryptocurrencyId()),
-//                operationDto.getAmount().negate(),
-//                operationDto.getAmount().multiply(operationDto.getPrice())
-//        );
-//        System.out.println(operationDto);
-//        walletService.sellCrypto(user().getWallet().getId(), operationDto);
         walletService.tryMakeOperation(user().getWallet().getId(), operationDto, false);
         return "redirect:trade?success";
     }
 
     @GetMapping("/ranking")
     public String showRanking(Model model) {
-        Map<String, BigDecimal> ranking = walletService.getSortedWallets();
+        Map<String, BigDecimal> ranking = walletService.getSortedActiveWallets();
         model.addAttribute("wallets", ranking);
         return "ranking";
     }
@@ -113,7 +98,7 @@ public class MainController {
 
     @PostMapping("/account/password")
     public String changePassword(@ModelAttribute("updateUser") UserUpdateDto updatedUser) {
-        updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
+        updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()); //try to change to user().getUsername()
         return userService.updatePassword(updatedUser) != null ? "redirect:password?success" : "redirect:password?fail";
     }
 
@@ -125,7 +110,7 @@ public class MainController {
 
     @PostMapping("/account/email")
     public String changeEmail(@ModelAttribute("updateUser") UserUpdateDto updatedUser) {
-        updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
+        updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()); //try to change to user().getUsername()
         return userService.updateEmail(updatedUser) != null ? "redirect:email?success" : "redirect:email?fail";
     }
 }

@@ -40,7 +40,11 @@ public class User {
     @NotNull
     private Wallet wallet;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
     public User() {
+        this.enabled = false;
     }
 
     public User(String email, String name, String password, Collection<Role> roles, Wallet wallet) {
@@ -97,5 +101,13 @@ public class User {
 
     public void setWallet(Wallet wallet) {
         this.wallet = wallet;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

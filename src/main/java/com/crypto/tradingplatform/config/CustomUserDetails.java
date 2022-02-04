@@ -1,4 +1,4 @@
-package com.crypto.tradingplatform.web.detail;
+package com.crypto.tradingplatform.config;
 
 import com.crypto.tradingplatform.domain.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -56,6 +56,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isEnabled();
     }
 }
