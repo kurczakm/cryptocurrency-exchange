@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletContext;
 import java.util.Calendar;
@@ -38,18 +39,16 @@ public class UserRegistrationController {
 
     @PostMapping("/registration")
     public String registerUserAccount(@ModelAttribute("user") UserRegistrationDto userRegistrationDto) {
-        String url = "redirect:/registration/confirm/verification";
+        String url = "redirect:/registration";
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(url);
         boolean status = true;
 
         if (userService.findByName(userRegistrationDto.getName()) != null) {
-            url += "?takenName";
+            uriComponentsBuilder.queryParam("takenName");
             status = false;
         }
         if (userService.findByEmail(userRegistrationDto.getEmail()) != null) {
-            if(status)
-                url += "?takenEmail";
-            else
-                url += "&takenEmail";
+            uriComponentsBuilder.queryParam("takenEmail");
             status = false;
         }
 
@@ -57,10 +56,13 @@ public class UserRegistrationController {
             User user = userService.save(userRegistrationDto);
             String appUrl = servletContext.getContextPath();
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(appUrl, user));
-            url = user != null ? url+"?success" : "redirect:/registration?fail";
+            if(user != null)
+                return "redirect:/registration/confirm/verification?success";
+            else
+                uriComponentsBuilder.queryParam("fail");
         }
 
-        return url;
+        return uriComponentsBuilder.build().toUriString();
     }
 
     @GetMapping("/registration/confirm")

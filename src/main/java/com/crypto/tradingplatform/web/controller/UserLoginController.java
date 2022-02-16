@@ -14,4 +14,9 @@ public class UserLoginController {
     public String showLoginForm() {
         return "login";
     }
+
+    @GetMapping("/")
+    public String startPage() {
+        return "index";
+    }
 }

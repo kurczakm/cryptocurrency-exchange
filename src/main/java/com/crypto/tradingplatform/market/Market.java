@@ -39,7 +39,7 @@ public class Market {
         HashMap<Cryptocurrency, BigDecimal[]> currentPrices = new HashMap<>();
         List<Cryptocurrency> cryptocurrencies = cryptocurrencyRepository.findAll();
         for (Cryptocurrency cryptocurrency : cryptocurrencies) {
-            BigDecimal price = getPrice(cryptocurrency.getName());
+            BigDecimal price = getPriceAPI(cryptocurrency.getName());
             BigDecimal[] prices = new BigDecimal[2];
             //ask za tyle kupujemy
             prices[0] = price.multiply(BigDecimal.valueOf(1.01)).setScale(2, RoundingMode.HALF_UP);
@@ -84,7 +84,7 @@ public class Market {
         return response;
     }
 
-    private BigDecimal getPrice(String cryptocurrencyName) {
+    private BigDecimal getPriceAPI(String cryptocurrencyName) {
         BigDecimal price = null;
 
         try {

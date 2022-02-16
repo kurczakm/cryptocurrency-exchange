@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -45,32 +46,39 @@ public class MainController {
         return market.getPrices();
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "index";
-    }
-
     @GetMapping("/wallet")
     public String showWallet() {
         return "wallet";
     }
 
     @GetMapping("/trade")
-    public String showTrade(Model model) {
-        model.addAttribute("operation", new OperationDto());
+    public String showTrade() {
         return "trade";
     }
 
+    @GetMapping("/trade/cryptocurrency")
+    public String showTradeCryptocurrency(@RequestParam(name = "symbol") String symbol, Model model) {
+        Cryptocurrency cryptocurrency = cryptocurrencyRepository.findBySymbol(symbol);
+        BigDecimal[] prices = cryptocurrencies().get(cryptocurrency);
+        BigDecimal amount = user().getWallet().getOwnedCrypto().get(cryptocurrency);
+        model.addAttribute("amount", amount);
+        model.addAttribute("crypto", cryptocurrency);
+        model.addAttribute("prices", prices);
+        model.addAttribute("operation", new OperationDto());
+
+        return "trade-cryptocurrency";
+    }
+
     @PostMapping("/buy")
-    public String buy(@ModelAttribute("operation") OperationDto operationDto) {
+    public String buy(@ModelAttribute("operation") OperationDto operationDto, @RequestParam(name="symbol") String symbol) {
         walletService.tryMakeOperation(user().getWallet().getId(), operationDto, true);
-        return "redirect:trade?success";
+        return "redirect:trade/cryptocurrency?symbol=" + symbol;
     }
 
     @PostMapping("/sell")
-    public String sell(@ModelAttribute("operation") OperationDto operationDto) {
+    public String sell(@ModelAttribute("operation") OperationDto operationDto, @RequestParam(name="symbol") String symbol) {
         walletService.tryMakeOperation(user().getWallet().getId(), operationDto, false);
-        return "redirect:trade?success";
+        return "redirect:trade/cryptocurrency?symbol=" + symbol;
     }
 
     @GetMapping("/ranking")
@@ -85,32 +93,21 @@ public class MainController {
         return "history";
     }
 
-    @GetMapping("/account")
-    public String showAccount() {
-        return "account";
-    }
-
-    @GetMapping("/account/password")
-    public String showPasswordForm(Model model) {
+    @GetMapping("/settings")
+    public String showAccount(Model model) {
         model.addAttribute("updateUser", new UserUpdateDto());
-        return "password";
+        return "settings";
     }
 
-    @PostMapping("/account/password")
+    @PostMapping("/settings/password")
     public String changePassword(@ModelAttribute("updateUser") UserUpdateDto updatedUser) {
         updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()); //try to change to user().getUsername()
-        return userService.updatePassword(updatedUser) != null ? "redirect:password?success" : "redirect:password?fail";
+        return userService.updatePassword(updatedUser) != null ? "redirect:/settings?password=success" : "redirect:/settings?password=fail";
     }
 
-    @GetMapping("/account/email")
-    public String showEmailForm(Model model) {
-        model.addAttribute("updateUser", new UserUpdateDto());
-        return "email";
-    }
-
-    @PostMapping("/account/email")
+    @PostMapping("/settings/email")
     public String changeEmail(@ModelAttribute("updateUser") UserUpdateDto updatedUser) {
         updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()); //try to change to user().getUsername()
-        return userService.updateEmail(updatedUser) != null ? "redirect:email?success" : "redirect:email?fail";
+        return userService.updateEmail(updatedUser) != null ? "redirect:/settings?email=success" : "redirect:/settings?email=fail";
     }
 }
