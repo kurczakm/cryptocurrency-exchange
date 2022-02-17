@@ -9,7 +9,7 @@ public class OperationDto {
     private String amount;
     private Long cryptocurrencyId;
     private BigDecimal price;
-    //result of amount input validation
+    //validation result of amount input
     private boolean correctInput;
 
     public OperationDto() {
@@ -49,7 +49,7 @@ public class OperationDto {
         this.correctInput = correctInput;
     }
 
-    public void checkAmount() {
+    private void checkAmount() {
         correctInput = NumberUtils.isCreatable(amount);
     }
 

@@ -27,5 +27,4 @@ public class ConfirmationMailSender {
 
         mailSender.send(email);
     }
-
 }

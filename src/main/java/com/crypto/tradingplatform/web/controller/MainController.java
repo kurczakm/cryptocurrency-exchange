@@ -101,13 +101,13 @@ public class MainController {
 
     @PostMapping("/settings/password")
     public String changePassword(@ModelAttribute("updateUser") UserUpdateDto updatedUser) {
-        updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()); //try to change to user().getUsername()
+        updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
         return userService.updatePassword(updatedUser) != null ? "redirect:/settings?password=success" : "redirect:/settings?password=fail";
     }
 
     @PostMapping("/settings/email")
     public String changeEmail(@ModelAttribute("updateUser") UserUpdateDto updatedUser) {
-        updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername()); //try to change to user().getUsername()
+        updatedUser.setName(((CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
         return userService.updateEmail(updatedUser) != null ? "redirect:/settings?email=success" : "redirect:/settings?email=fail";
     }
 }
