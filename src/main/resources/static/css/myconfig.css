@@ -1,0 +1,180 @@
+body, html
+{
+    height: 100%;
+    background-color: rgb(235, 246, 255);
+    min-width: 605px;
+}
+
+#wrap
+{
+    min-height: 100%;
+}
+
+#main
+{
+    overflow: auto;
+    padding-bottom: 208px;
+}
+
+.footer
+{
+    position: relative;
+    margin-top: -208px;
+    clear: both;
+}
+
+.footer-caption
+{
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.navbar-top
+{
+    min-height: 62px;
+}
+
+.sidebar
+{
+    min-height: 400px;
+    height: 100vh;
+}
+
+.sidebar > ul > li:hover
+{
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 0.25rem;
+}
+
+.sidebar > .dropdown > ul
+{
+    width: 100%;
+}
+
+.card
+{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.card-body > p
+{
+    text-align: justify;
+}
+
+.card-body > h1
+{
+    font-size: 37px;
+    font-weight: 900;
+}
+
+.social
+{
+    font-size: 80px;
+}
+
+a
+{
+    color: white;
+}
+
+a:hover
+{
+    color: white;
+}
+
+.social:hover
+{
+    cursor: pointer;
+}
+
+.github:hover
+{
+    background-color: #3f3f3f;
+}
+
+.linkedin:hover
+{
+    background-color: #0e76a8;
+}
+
+.menu-option
+{
+    width: 180px;
+}
+
+.heading
+{
+    background-color: #fff;
+    font-size: 50px;
+    border-radius: 10px;
+    border: 2px solid #212529;
+    margin-top: 40px;
+}
+
+.main-content
+{
+    background-color: #fff;
+    font-size: 20px;
+    border-radius: 10px;
+    border: 2px solid #212529;
+    margin-top: 30px;
+    min-height: 70vh;
+}
+
+.accordion-button-settings
+{
+    border-radius: 10px !important;
+    border: 1px solid #d8d7d7;
+}
+
+@media (max-width: 1200px)
+{
+    .card-body > h1
+    {
+        font-size: 25px;
+    }
+
+    .card-body > p
+    {
+        font-size: 10px;
+    }
+
+    .sidebar > ul > li
+    {
+        text-align: center;
+    }
+}
+
+@media (max-width:1350px)
+{
+    .logo
+    {
+        font-size: 16px !important;
+    }
+}
+
+@media (max-width: 991px)
+{
+    .heading
+    {
+        font-size: 30px;
+    }
+    
+    .main-content
+    {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 767px)
+{
+    .social
+    {
+        font-size: 50px;
+    }
+
+    .main-content-wide
+    {
+        font-size: 10px;
+    }
+}

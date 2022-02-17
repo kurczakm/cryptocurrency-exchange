@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet</title>
+    <title>Settings</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/fontello.css">
     <link rel="stylesheet" href="css/myconfig.css">
@@ -141,7 +141,7 @@
                                                         <form th:action="@{/settings/email}" method="post" th:object="${updateUser}">
                                                             <div class="mb-3">
                                                                 <label for="inputEmail" th:text="#{settings.newEmail}">new email address</label>
-                                                                <input type="email" class="form-control" id="inputEmail" th:field="*{newEmail}" placeholder="Email">
+                                                                <input type="email" class="form-control" id="inputEmail" th:field="*{newEmail}" placeholder="Enter new email">
                                                             </div>
                                                             <div class="mb-3">
                                                                 <button type="submit" class="btn btn-dark">

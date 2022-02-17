@@ -95,12 +95,12 @@
                                         <thead>
                                             <tr>
                                                 <div class="row">
-                                                    <th th:text="#{history.cryptocurrency}">Cryptocurrency</th>
-                                                    <th th:text="#{history.amount}">Amount</th>
-                                                    <th th:text="#{history.volume}">Volume</th>
-                                                    <th th:text="#{history.cryptoSaldo}">Crypto saldo</th>
-                                                    <th th:text="#{history.fundsSaldo}">Funds saldo</th>
-                                                    <th th:text="#{history.date}">Date</th>
+                                                    <th class="text-center" th:text="#{history.cryptocurrency}">Cryptocurrency</th>
+                                                    <th class="text-center" th:text="#{history.amount}">Amount</th>
+                                                    <th class="text-end" th:text="#{history.volume}">Volume</th>
+                                                    <th class="text-center" th:text="#{history.cryptoSaldo}">Crypto saldo</th>
+                                                    <th class="text-end" th:text="#{history.fundsSaldo}">Funds saldo</th>
+                                                    <th class="text-center" th:text="#{history.date}">Date</th>
                                                 </div>
                                             </tr>
                                         </thead>
@@ -108,12 +108,12 @@
                                         <tbody>
                                             <tr th:each="operation : ${user.wallet.operations}">
                                                 <div class="row">
-                                                    <td th:text="${operation.cryptocurrency.symbol}">btc</td>
-                                                    <td th:text="${#numbers.formatDecimal(operation.amount, 1, 'WHITESPACE', 8, 'POINT')}">1.0</td>
-                                                    <td th:text="${operation.volume}">42012.24</td>
-                                                    <td th:text="${#numbers.formatDecimal(operation.cryptoSaldo, 1, 'WHITESPACE', 8, 'POINT')}">1.2</td>
-                                                    <td th:text="${operation.fundsSaldo}">234.94</td>
-                                                    <td th:text="${operation.date}">2022-01-08 21:17:18</td>
+                                                    <td class="text-center" th:text="${operation.cryptocurrency.symbol}">btc</td>
+                                                    <td class="text-center" th:text="${#numbers.formatDecimal(operation.amount, 1, 'WHITESPACE', 8, 'POINT')}">1.0</td>
+                                                    <td class="text-end" th:text="${operation.volume}">42012.24</td>
+                                                    <td class="text-center" th:text="${#numbers.formatDecimal(operation.cryptoSaldo, 1, 'WHITESPACE', 8, 'POINT')}">1.2</td>
+                                                    <td class="text-end" th:text="${operation.fundsSaldo}">234.94</td>
+                                                    <td class="text-center" th:text="${operation.date}">2022-01-08 21:17:18</td>
                                                 </div>
                                             </tr>
                                         </tbody>
