@@ -6,9 +6,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,7 +35,7 @@ public class Market {
         prices = new HashMap<>();
     }
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     private void updatePrices() {
         HashMap<Cryptocurrency, BigDecimal[]> currentPrices = new HashMap<>();
         List<Cryptocurrency> cryptocurrencies = cryptocurrencyRepository.findAll();
