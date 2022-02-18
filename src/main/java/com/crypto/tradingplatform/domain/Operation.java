@@ -64,63 +64,31 @@ public class Operation {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Date getDate() {
         return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public Cryptocurrency getCryptocurrency() {
         return cryptocurrency;
     }
 
-    public void setCryptocurrency(Cryptocurrency cryptocurrency) {
-        this.cryptocurrency = cryptocurrency;
-    }
-
     public BigDecimal getAmount() {
         return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public BigDecimal getVolume() {
         return volume;
     }
 
-    public void setVolume(BigDecimal volume) {
-        this.volume = volume;
-    }
-
     public BigDecimal getCryptoSaldo() {
         return cryptoSaldo;
-    }
-
-    public void setCryptoSaldo(BigDecimal cryptoSaldo) {
-        this.cryptoSaldo = cryptoSaldo;
     }
 
     public BigDecimal getFundsSaldo() {
         return fundsSaldo;
     }
 
-    public void setFundsSaldo(BigDecimal fundsSaldo) {
-        this.fundsSaldo = fundsSaldo;
-    }
-
     public Wallet getWallet() {
         return wallet;
-    }
-
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
     }
 }

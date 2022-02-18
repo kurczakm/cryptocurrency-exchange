@@ -59,10 +59,6 @@ public class User {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -73,10 +69,6 @@ public class User {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPassword() {
@@ -91,16 +83,8 @@ public class User {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
-
     public Wallet getWallet() {
         return wallet;
-    }
-
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
     }
 
     public boolean isEnabled() {

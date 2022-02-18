@@ -10,6 +10,7 @@ import com.crypto.tradingplatform.repository.UserRepository;
 import com.crypto.tradingplatform.repository.WalletRepository;
 import com.crypto.tradingplatform.web.dto.OperationDto;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -54,31 +55,47 @@ public class WalletService {
         return ranking;
     }
 
-    public boolean makeOperation(Long walletId, Cryptocurrency cryptocurrency, BigDecimal amount, BigDecimal volume) {
+    //mode true = buy crypto / false = sell crypto
+    public boolean makeOperation(Long walletId, Cryptocurrency cryptocurrency, BigDecimal amount, BigDecimal volume, Boolean mode) {
         boolean status = true;
 
         Wallet wallet = walletRepository.getById(walletId);
-
         BigDecimal ownedFunds = wallet.getFunds();
         BigDecimal ownedCryptoAmount = wallet.getOwnedCrypto().get(cryptocurrency);
 
-        BigDecimal newFunds = ownedFunds.add(volume);
-        BigDecimal newCryptoAmount = ownedCryptoAmount.add(amount);
+        if(mode && volume.compareTo(ownedFunds) <= 0) {
+            wallet.subtractFunds(volume);
+            wallet.addCrypto(cryptocurrency, amount);
 
-        if (newFunds.compareTo(BigDecimal.ZERO) >= 0 && newCryptoAmount.compareTo(BigDecimal.ZERO) >= 0) {
-            Operation operation = new Operation();
-            operation.setCryptocurrency(cryptocurrency);
-            operation.setAmount(amount);
-            operation.setVolume(volume);
-            operation.setCryptoSaldo(newCryptoAmount);
-            operation.setFundsSaldo(newFunds);
-            operation.setWallet(wallet);
-            wallet.setFunds(newFunds);
-            wallet.getOwnedCrypto().put(cryptocurrency, newCryptoAmount);
-            wallet.getOperations().add(operation);
+            Operation operation = new Operation(
+                    cryptocurrency,
+                    amount,
+                    volume.negate(),
+                    wallet.getOwnedCrypto().get(cryptocurrency),
+                    wallet.getFunds(),
+                    wallet
+            );
+
+            wallet.addOperation(operation);
             walletRepository.save(wallet);
+        }
+        else if(!mode && amount.compareTo(ownedCryptoAmount) <= 0) {
+            wallet.subtractCrypto(cryptocurrency, amount);
+            wallet.addFunds(volume);
 
-        } else {
+            Operation operation = new Operation(
+                    cryptocurrency,
+                    amount.negate(),
+                    volume,
+                    wallet.getOwnedCrypto().get(cryptocurrency),
+                    wallet.getFunds(),
+                    wallet
+            );
+
+            wallet.addOperation(operation);
+            walletRepository.save(wallet);
+        }
+        else {
             status = false;
         }
 
@@ -87,29 +104,30 @@ public class WalletService {
 
     //mode true = buy crypto / false = sell crypto
     public boolean tryMakeOperation(Long walletId, OperationDto operationDto, boolean mode) {
-        boolean status = true;
-        if (operationDto.isCorrectInput()) {
+        boolean status = NumberUtils.isCreatable(operationDto.getAmount());
+        if (status) {
             BigDecimal amount = new BigDecimal(operationDto.getAmount());
             if (amount.compareTo(BigDecimal.ZERO) > 0 && amount.scale() <= 8) {
                 BigDecimal volume = amount.multiply(operationDto.getPrice());
-                if (mode)
-                    volume = volume.negate();
-                else
-                    amount = amount.negate();
 
                 //rounding
-                volume = volume.setScale(2, RoundingMode.FLOOR);
+                if(mode)
+                    volume = volume.setScale(2, RoundingMode.CEILING);
+                else
+                    volume = volume.setScale(2, RoundingMode.FLOOR);
 
                 makeOperation(
                         walletId,
                         cryptocurrencyRepository.getById(operationDto.getCryptocurrencyId()),
                         amount,
-                        volume
+                        volume,
+                        mode
                 );
             } else
                 status = false;
         } else
             status = false;
+
         return status;
     }
 }

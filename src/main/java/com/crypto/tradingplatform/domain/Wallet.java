@@ -38,12 +38,6 @@ public class Wallet {
         operations = new LinkedHashSet<>();
     }
 
-    public Wallet(BigDecimal funds, Map<Cryptocurrency, BigDecimal> ownedCrypto, LinkedHashSet<Operation> operations) {
-        this.funds = funds;
-        this.ownedCrypto = ownedCrypto;
-        this.operations = operations;
-    }
-
     public Wallet(BigDecimal funds, List<Cryptocurrency> cryptocurrencies) {
         this.funds = funds;
         this.ownedCrypto = new HashMap<>();
@@ -57,32 +51,57 @@ public class Wallet {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public BigDecimal getFunds() {
         return funds;
     }
 
-    public void setFunds(BigDecimal funds) {
-        this.funds = funds;
+    public void addFunds(BigDecimal amountToAdd) {
+        if(amountToAdd.compareTo(BigDecimal.ZERO) > 0)
+            this.funds = this.funds.add(amountToAdd);
+        else
+            throw new IllegalArgumentException("Amount of funds to add must be greater than 0");
+    }
+
+    public void subtractFunds(BigDecimal amountToSubtract) {
+        if(amountToSubtract.compareTo(BigDecimal.ZERO) <= 0)
+            throw new IllegalArgumentException("Amount of funds to subtract must be greater than 0");
+
+        if(amountToSubtract.compareTo(this.funds) <= 0)
+            this.funds = this.funds.subtract(amountToSubtract);
+        else
+            throw new RuntimeException("Not enough funds");
     }
 
     public Map<Cryptocurrency, BigDecimal> getOwnedCrypto() {
         return ownedCrypto;
     }
 
-    public void setOwnedCrypto(Map<Cryptocurrency, BigDecimal> ownedCrypto) {
-        this.ownedCrypto = ownedCrypto;
+    public void addCrypto(Cryptocurrency cryptocurrency, BigDecimal amountToAdd) {
+        if(amountToAdd.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal currentAmount = this.ownedCrypto.get(cryptocurrency);
+            this.ownedCrypto.put(cryptocurrency, currentAmount.add(amountToAdd));
+        }
+        else
+            throw new IllegalArgumentException("Amount of cryptocurrency to add must be greater than 0");
+    }
+
+    public void subtractCrypto(Cryptocurrency cryptocurrency, BigDecimal amountToSubtract) {
+        if(amountToSubtract.compareTo(BigDecimal.ZERO) <= 0)
+            throw new IllegalArgumentException("Amount of crypto to subtract must be greater than 0");
+
+        BigDecimal currentAmount = this.ownedCrypto.get(cryptocurrency);
+        if(amountToSubtract.compareTo(currentAmount) <= 0)
+            this.ownedCrypto.put(cryptocurrency, currentAmount.subtract(amountToSubtract));
+        else
+            throw new RuntimeException("Not enough crypto");
     }
 
     public Set<Operation> getOperations() {
         return operations;
     }
 
-    public void setOperations(LinkedHashSet<Operation> operations) {
-        this.operations = operations;
+    public void addOperation(Operation operation) {
+        this.operations.add(operation);
     }
 
     public BigDecimal getValue() {
