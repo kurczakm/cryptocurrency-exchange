@@ -13,7 +13,7 @@
    chmod u+x mvnw
    ./mvnw install
    ```
-4. Go to the target folder, and run following command
+4. Go to the target folder, open terminal and run following command
    ```
    java -jar trading-platform-0.0.1-SNAPSHOT.jar
    ```
