@@ -1,7 +1,27 @@
 # cryptocurrency-exchange
 
-The application simulates the cryptocurrency exchange. The user can create his account to build his portfolio. An inexperienced user can start his adventure with cryptocurrencies without losing his own money, and an experienced trader can compete with other users to be at the top of the ranking.
+### How to install?
+1. Download repo
+2. Make sure you have installed JDK, otherwise install it
+3. Go to the project folder, open terminal and run following command
+   - for Windows
+   ```
+   .\mvnw install
+   ```
+   - for Linux
+   ```
+   chmod u+x mvnw
+   ./mvnw install
+   ```
+4. Go to the target folder, and run following command
+   ```
+   java -jar trading-platform-0.0.1-SNAPSHOT.jar
+   ```
 
+<hr>
+
+The application simulates the cryptocurrency exchange. The user can create his account to build his portfolio. An inexperienced user can start his adventure with cryptocurrencies without losing his own money, and an experienced trader can compete with other users to be at the top of the ranking.
+   
 #### home page
 ![home page demo](demo/home.png)
 <hr>
